@@ -5,7 +5,7 @@ import java.awt.*;
 
 public class Main extends JPanel {
     private final FireflyGrid fireflyGrid;
-    private final int cellSize = 80; // Zellengröße in Pixeln
+    private final int cellSize = 60; // Zellengröße in Pixeln
     private final Image brightFirefly;
     private final Image darkFirefly;
 
@@ -42,7 +42,7 @@ public class Main extends JPanel {
 
     public static void main(String[] args) {
         int gridSize = 10; // Größe des Gitters
-        JFrame frame = new JFrame("Glühwürmchen-Synchronisation");
+        JFrame frame = new JFrame("Glückliche-Glühwürmer");
         Main simulationPanel = new Main(gridSize);
 
         frame.add(simulationPanel);
