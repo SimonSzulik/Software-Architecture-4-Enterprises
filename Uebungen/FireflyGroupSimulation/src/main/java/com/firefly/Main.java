@@ -1,11 +1,18 @@
+/***********************************/
+/*** Simon Szulik  ******  1474315 */
+/*** Softwarearchitecture WS 24/25 */
+/***********************************/
 package com.firefly;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class Main extends JPanel {
+    // Grid Variabeln
     private final FireflyGrid fireflyGrid;
-    private final int cellSize = 60; // Zellengröße in Pixeln
+    private final int cellSize = 60;
+
+    // Firefly jpgs's
     private final Image brightFirefly;
     private final Image darkFirefly;
 
@@ -35,18 +42,17 @@ public class Main extends JPanel {
                 g.drawImage(fireflyImage, firefly.getX() * cellSize, firefly.getY() * cellSize, cellSize, cellSize, null);
             }
         }
-
-        // Automatische Neuzeichnung
         repaint();
     }
 
     public static void main(String[] args) {
-        int gridSize = 10; // Größe des Gitters
+        int gridSize = 10;
+
         JFrame frame = new JFrame("Glückliche-Glühwürmer");
         Main simulationPanel = new Main(gridSize);
 
         frame.add(simulationPanel);
-        frame.setSize(600, 600);
+        frame.setSize(600, 620);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }

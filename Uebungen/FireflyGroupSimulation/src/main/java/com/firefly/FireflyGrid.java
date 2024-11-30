@@ -1,3 +1,7 @@
+/***********************************/
+/*** Simon Szulik  ******  1474315 */
+/*** Softwarearchitecture WS 24/25 */
+/***********************************/
 package com.firefly;
 
 import java.util.ArrayList;
@@ -17,8 +21,8 @@ public class FireflyGrid {
     private void initializeGrid() {
         for (int x = 0; x < gridSize; x++) {
             for (int y = 0; y < gridSize; y++) {
-                double initialPhase = Math.random() * 2 * Math.PI; // Zufällige Phase
-                grid[x][y] = new Firefly(x, y, initialPhase);
+              //  double initialPhase = Math.random() * 2 * Math.PI; // Zufällige Phase
+                grid[x][y] = new Firefly(x, y, 0);
             }
         }
     }
