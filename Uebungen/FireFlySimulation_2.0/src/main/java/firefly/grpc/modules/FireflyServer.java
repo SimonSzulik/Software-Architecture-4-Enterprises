@@ -12,12 +12,17 @@ public class FireflyServer {
 
     private final int port;
     private final Server server;
+    private static double receivedFlash = 0;
 
     public FireflyServer(int port) {
         this.port = port;
         this.server = ServerBuilder.forPort(port)
                 .addService(new FireflyServiceImpl())
                 .build();
+    }
+
+    public static double getReceivedFlash() {
+        return receivedFlash;
     }
 
     public void start() throws IOException {
@@ -50,9 +55,11 @@ public class FireflyServer {
     }
 
     static class FireflyServiceImpl extends FireflyServiceGrpc.FireflyServiceImplBase {
+
         @Override
         public void notifyFirefly(FireflyProto.FireflyRequest request, StreamObserver<FireflyProto.FireflyReply> responseObserver) {
             // Verarbeite die Anfrage
+            receivedFlash = request.getFlash();
             System.out.println("Received flash: " + request.getFlash());
             FireflyProto.FireflyReply reply = FireflyProto.FireflyReply.newBuilder().setReply(request.getFlash()).build();
             responseObserver.onNext(reply);
