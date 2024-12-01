@@ -34,11 +34,12 @@ protobuf {
 tasks.register('runFirefly', JavaExec) {
     mainClass = 'firefly.grpc.FireflyProcess'
     doFirst {
-        if (project.hasProperty('ports') && project.ports.split(',').size() == 2) {
-            def ports = project.ports.split(',')
-            args = [ports[0].trim(), ports[1].trim()]
+        if (project.hasProperty('ports') && project.ports.split(',').size() >= 2) {
+            // Ports aus der Eigenschaft 'ports' extrahieren und als Liste speichern
+            def ports = project.ports.split(',').collect { it.trim() }
+            args = ports
         } else {
-            throw new GradleException("You must provide two port numbers: gradle runFirefly -Pports=5001,5005")
+            throw new GradleException("You must provide at least two port numbers: gradle runFirefly -Pports=5001,5005,5006")
         }
     }
     classpath = sourceSets.main.runtimeClasspath

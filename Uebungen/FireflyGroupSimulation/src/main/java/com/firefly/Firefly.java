@@ -14,7 +14,7 @@ public class Firefly implements Runnable {
     // Phasen Variabeln
     private double phase;
     private double omega = 1; // Eigenfrequenz
-    private final double K = 0.1; // Kopplungsstärke
+    private final double K = 0.01; // Kopplungsstärke
 
     // Synchronisation
     private final Object lock = new Object(); // Threadsicherheit
@@ -34,7 +34,7 @@ public class Firefly implements Runnable {
         while (true) {
             updatePhase();
             try {
-                Thread.sleep(100); // Zeitschritt (100 ms)
+                Thread.sleep(1000); // Zeitschritt (100 ms)
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
