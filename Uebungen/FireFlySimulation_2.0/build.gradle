@@ -1,0 +1,45 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'com.google.protobuf' version '0.9.3'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'javax.annotation:javax.annotation-api:1.3.2'
+    implementation 'io.grpc:grpc-netty:1.58.0'
+    implementation 'io.grpc:grpc-protobuf:1.58.0'
+    implementation 'io.grpc:grpc-stub:1.58.0'
+}
+
+protobuf {
+    protoc {
+        artifact = 'com.google.protobuf:protoc:3.23.4'
+    }
+    plugins {
+        grpc {
+            artifact = 'io.grpc:protoc-gen-grpc-java:1.58.0'
+        }
+    }
+    generateProtoTasks {
+        all()*.plugins {
+            grpc {}
+        }
+    }
+}
+
+tasks.register('runFirefly', JavaExec) {
+    mainClass = 'firefly.grpc.FireflyProcess'
+    doFirst {
+        if (project.hasProperty('ports') && project.ports.split(',').size() == 2) {
+            def ports = project.ports.split(',')
+            args = [ports[0].trim(), ports[1].trim()]
+        } else {
+            throw new GradleException("You must provide two port numbers: gradle runFirefly -Pports=5001,5005")
+        }
+    }
+    classpath = sourceSets.main.runtimeClasspath
+}

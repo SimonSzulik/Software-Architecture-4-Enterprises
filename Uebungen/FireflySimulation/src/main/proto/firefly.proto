@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package firefly;
+
+service FireflyService {
+  // Einfache Methode, um Nachrichten zu senden
+  rpc sendMessage (MessageRequest) returns (MessageResponse);
+}
+
+message MessageRequest {
+  string message = 1;
+}
+
+message MessageResponse {
+  string reply = 1;
+}
