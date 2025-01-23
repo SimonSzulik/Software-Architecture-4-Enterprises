@@ -1,0 +1,40 @@
+version: '3.8'
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - app-network
+
+  node-app:
+    build:
+      context: ./app
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/xmaswishes
+    networks:
+      - app-network
+    depends_on:
+      - mongo
+    deploy:
+      replicas: 3  # 3 Container-Instanzen
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - app-network
+
+volumes:
+  mongo-data:
+
+networks:
+  app-network:
+    driver: bridge
