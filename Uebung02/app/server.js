@@ -1,40 +1,65 @@
-require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const path = require('path');
 
 const app = express();
-app.use(express.json());
+const PORT = 3000;
 
-// Verbindung zu MongoDB
-mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-}).then(() => console.log('MongoDB connected'))
+// MongoDB-Verbindung
+const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/xmaswishes';
+mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log('MongoDB connected'))
     .catch(err => console.error('MongoDB connection error:', err));
 
-// Modell für Wünsche
+// Middleware
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+// Schema und Modell
 const wishSchema = new mongoose.Schema({
-    name: String,
-    address: String,
-    wish: String,
-    timestamp: { type: Date, default: Date.now },
+    name: { type: String, required: true },
+    address: { type: String, required: true },
+    wish: { type: String, required: true },
+    createdAt: { type: Date, default: Date.now }
 });
+
 const Wish = mongoose.model('Wish', wishSchema);
 
-// API-Endpoints
-app.get('/wishes', async (req, res) => {
-    const wishes = await Wish.find();
-    res.json(wishes);
+
+// Serve static files (HTML)
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-app.post('/wishes', async (req, res) => {
-    const wish = new Wish(req.body);
-    await wish.save();
-    res.status(201).json(wish);
+// POST-Route für Formulareingaben
+app.post('/submit-wish', async (req, res) => {
+    try {
+        const { name, address, wish } = req.body;
+        if (!name || !address || !wish) {
+            return res.status(400).send('Bitte alle Felder ausfüllen!');
+        }
+        const newWish = new Wish({ name, address, wish });
+        await newWish.save();
+        res.send('<h1>Wunsch wurde erfolgreich gespeichert!</h1>');
+    } catch (err) {
+        console.error('Fehler beim Speichern:', err);
+        res.status(500).send('Fehler beim Speichern des Wunsches.');
+    }
 });
+
 
 // Server starten
-const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log(`Server running on http://localhost:${PORT}`);
+});
+
+app.get('/wishes', async (req, res) => {
+    try {
+        const wishes = await Wish.find();
+        res.json(wishes);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Fehler beim Abrufen der Wünsche.');
+    }
 });

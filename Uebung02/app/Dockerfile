@@ -1,5 +1,5 @@
 # Node.js Image
-FROM node:18
+FROM node:16
 
 # Arbeitsverzeichnis erstellen
 WORKDIR /usr/src/app
