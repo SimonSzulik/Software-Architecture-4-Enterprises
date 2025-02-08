@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option java_package = "firefly.grpc";
+option java_outer_classname = "FireflyProto";
+
+
+service FireflyService {
+  rpc notifyFirefly (FireflyRequest) returns (FireflyReply);
+}
+
+message FireflyRequest {
+  double flash = 1;
+}
+
+message FireflyReply {
+  double reply = 1;
+}
